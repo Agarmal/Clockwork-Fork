@@ -191,8 +191,8 @@ class DeliveryCannonBlockEntity(type: BlockEntityType<*>?, pos: BlockPos?, state
     }
 
     fun reset() {
-        xRot.updateChaseTarget(defaultXrot.toFloat())
-        yRot.updateChaseTarget(0f)
+        /*xRot.updateChaseTarget(defaultXrot.toFloat())
+        yRot.updateChaseTarget(0f)*/
         distance.setValue(0.0)
         distance.updateChaseTarget(0f)
 
