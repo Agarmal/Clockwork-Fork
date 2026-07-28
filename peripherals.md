@@ -550,6 +550,53 @@ Throws if `direction` is not one of: `UP`, `DOWN` or `BOTH`.
 
 ---
 
+## Gas valve peripheral
+
+Peripheral type: `cw_valve_duct`
+
+---
+
+```lua
+getAngle() -> number
+```
+
+The valves target angle, set by computer or by rotation direction. Will be within the range `0 .. 90`
+
+`0` represents a fully closed valve, `90` is a fully opened valve
+
+---
+
+```lua
+getActualAngle() -> number
+```
+
+The actual angle the valve is currently at. Will be within the range `0 .. 90`
+
+This will not be the same as `getAngle` while the valve is rotating towards the target.
+
+---
+
+```lua
+setAngle(angle: number)
+```
+
+Sets the angle the valve is currently open. `angle` must be in the range `0 .. 90`.
+
+The valve will then try to reach that target angle, moving at the speed of create rotation given to it.
+
+Throws if:
+- The range is outside `0 .. 90`
+
+---
+
+```lua
+resetAngle()
+```
+
+Sets the valves target angle to the rotation direction, e.g. the behaviour before a computer started controlling it.
+
+---
+
 This page is still a work in progress. 
 
 Spot an error, or want to add extra information?
