@@ -72,7 +72,17 @@ class ValveDuctBlockEntity(typeIn: BlockEntityType<*>, pos: BlockPos, state: Blo
             target = it
         }
 
-        println(target)
+        //region I'm not sure how this would get to be NaN, but someone managed it, so we have to make sure.
+        // If computerTarget is not null and is not finite
+        if (!(computerTarget?.isFinite() ?: true)) {
+            computerTarget = 0.0
+        }
+
+        if (!pointer.value.isFinite()) {
+            pointer.setValue(0.0)
+        }
+        //endregion
+
         pointer.chase(target, getChaseSpeed(), LerpedFloat.Chaser.LINEAR)
 
         sendData()
