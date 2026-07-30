@@ -18,7 +18,7 @@ class ValveDuctPeripheral(private val be: ValveDuctBlockEntity): IPeripheral {
 
     @LuaFunction
     fun setAngle(angle: Double) {
-        if ((angle < 0) || (angle > 90)) {
+        if ((angle < 0) || (angle > 90) || !angle.isFinite()) {
             throw LuaException("Angle must be within range 0..90")
         }
 
