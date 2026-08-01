@@ -53,6 +53,12 @@ object ClockworkConfig {
         @ConfigCategory(title = "Kelvin")
         val kelvin = Kelvin()
 
+        @ConfigCategory(title = "Gimbal Bearing")
+        val gimbal = Gimbal()
+
+        @ConfigCategory(title = "Gas Engine")
+        val gasEngine = GasEngine()
+
         @ConfigEntry(description = "Enable verbose debug logging")
         var debugMode = false
 
@@ -193,7 +199,7 @@ object ClockworkConfig {
         var heaterKindledTemp = 800
 
         @ConfigEntry(description = "Temperature for the gas heater to act like a superheated blaze burner. Default is 1500K (real metallurgy)")
-        var heaterSeethingTemp = 1500
+        var heaterSeethingTemp = 1300
 
         @ConfigEntry(description = "Temperature for gas exhaust to trigger bulk smoking. Default is 500K (baking oven)")
         var bulkSmokingTemp = 500
@@ -201,7 +207,8 @@ object ClockworkConfig {
         @ConfigEntry(description = "Temperature for gas exhaust to trigger bulk blasting. Default is 1000K (ceramic firing)")
         var bulkBlastingTemp = 1000
 
-        @ConfigEntry(description = "Multiplier applied to ship mass when yeeting (left-clicking) with the survival gravitron", min = 0.0, max = 10000.0)
+
+        @ConfigEntry(description = "Multiplier applied to ship mass when yeeting (left-clicking) with t he survival gravitron", min = 0.0, max = 10000.0)
         var survivalGravitronYeetForce = 1000.0
 
         @ConfigEntry(description = "Maximum range (in blocks) the survival gravitron will interact with ships", min = 1.0, max = 1000.0)
@@ -224,12 +231,59 @@ object ClockworkConfig {
 
     }
 
+    class Gimbal {
+        @ConfigEntry(min = 0.0, description = "Proportional gain for the Gimbal Bearing force controller (Locked / Gyroscopic modes). Interpreted as target acceleration per block of center-of-mass position error.")
+        var gimbalPositionErrorMultiplier = 400.0
+
+        @ConfigEntry(min = 0.0, description = "Derivative gain for the Gimbal Bearing force controller. Damps relative point velocity between the shiptraption and the target pose.")
+        var gimbalVelocityErrorMultiplier = 30.0
+
+        @ConfigEntry(min = 0.0, description = "Maximum force the Gimbal Bearing may apply, scaled per RPM per kilogram. Set 0 to disable clamping.")
+        var gimbalMaxForcePerRpmPerKg = 10.5
+
+        @ConfigEntry(min = 0.0, description = "Direct force the Gimbal Bearing applies in Unlocked mode, scaled by redstone strength per RPM per kilogram.")
+        var gimbalUnlockedForcePerRpmPerKg = 1.5
+    }
+
+    class GasEngine {
+        @ConfigEntry(description = "Gas mass flow rate through a Gas Engine required for full power, in kg/s. Set to 0 to make any non-zero through-flow full power.", min = 0.0)
+        var gasEngineFlowForFullEfficiency = 5.0
+
+        @ConfigEntry(description = "Gas mass flow rate below which a Gas Engine treats through-flow as zero, in kg/s.", min = 0.0)
+        var gasEngineMinimumFlowRate = 0.5
+
+        @ConfigEntry(description = "Gas Engine flow rate increment, in kg/s. Through-flow is rounded down to this step before efficiency is calculated. Set to 0 to disable flow stepping.", min = 0.0)
+        var gasEngineFlowRateIncrement = 0.25
+
+        @ConfigEntry(description = "Gas Engine temperature increment, in K. Temperature efficiency gains one bar per increment above 290K.", min = 1.0)
+        var gasEngineTemperatureIncrement = 60.0
+
+        @ConfigEntry(description = "Maximum heat energy consumed per tick by a loaded Gas Engine at full efficiency.", min = 0.0)
+        var gasEngineMaxHeatLoss = 5000.0
+
+
+        @ConfigEntry(description = "Sterling Engine temperature increment, in K. Temperature efficiency gains one bar per increment above 290K.", min = 1.0)
+        var sterlingEngineTemperatureIncrement = 60.0
+
+        @ConfigEntry(description = "Maximum heat energy consumed per tick by a Sterling Engine at full efficiency.", min = 0.0)
+        var sterlingEngineMaxHeatLoss = 5000.0
+
+        @ConfigEntry(description = "Base stress capacity provided by a Sterling Engine at full efficiency.", min = 0.0)
+        var sterlingEngineStressCapacity = 16384.0
+
+        @ConfigEntry(description = "How quickly Sterling Engine efficiency approaches changes in temperature. 0 is instant, 1 is one tick.", min = 0.0, max = 1.0)
+        var sterlingEngineEfficiencySmoothing = 0.2
+    }
+
     class Kelvin {
         @ConfigEntry(description = "The gas physics solver used by Kelvin.")
         var kelvinSolver: KelvinSolverType = KelvinSolverType.JACOBI_SEIDEL
 
         @ConfigEntry(description = "Kelvin sub steps (per Tick)")
         var kelvinSubSteps = 10
+
+        @ConfigEntry(description = "Passive heat transfer multiplier for metal duct connections. Higher values make neighboring ducts equalize temperature faster.", min = 0.0)
+        var ductThermalConductivityMultiplier = 1000.0
 
         @ConfigEntry(description = "The lazytick rate for Kelvin node block entity updates")
         var kelvinNodeBlockEntityLazyTickRate = 10

@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks
 import com.simibubi.create.AllTags
 import com.simibubi.create.api.behaviour.display.DisplaySource.displaySource
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour.movementBehaviour
+import com.simibubi.create.api.stress.BlockStressValues
 import com.simibubi.create.content.decoration.encasing.CasingBlock
 import com.simibubi.create.content.decoration.encasing.EncasingRegistry
 import com.simibubi.create.content.fluids.PipeAttachmentModel
@@ -29,6 +30,7 @@ import org.valkyrienskies.clockwork.client.render.WingBlockItemRenderer
 import org.valkyrienskies.clockwork.content.contraptions.flap.FlapBearingBlock
 import org.valkyrienskies.clockwork.content.contraptions.flap.smart_flap.SmartFlapBearingBlock
 import org.valkyrienskies.clockwork.content.contraptions.phys.bearing.PhysBearingBlock
+import org.valkyrienskies.clockwork.content.contraptions.phys.gimbal.GimbalBearingBlock
 import org.valkyrienskies.clockwork.content.contraptions.phys.infuser.PhysicsInfuserBlock
 import org.valkyrienskies.clockwork.content.contraptions.phys.slicker.SlickerBlock
 import org.valkyrienskies.clockwork.content.contraptions.propeller.PropellerBearingBlock
@@ -56,6 +58,7 @@ import org.valkyrienskies.clockwork.content.logistics.gas.backtank.GasBacktankBl
 import org.valkyrienskies.clockwork.content.logistics.gas.crafter.GasCrafterBlock
 import org.valkyrienskies.clockwork.content.logistics.gas.duct.DuctBlock
 import org.valkyrienskies.clockwork.content.logistics.gas.engine.GasEngineBlock
+import org.valkyrienskies.clockwork.content.logistics.gas.engine.SterlingEngineBlock
 import org.valkyrienskies.clockwork.content.logistics.gas.exhaust.ExhaustBlock
 import org.valkyrienskies.clockwork.content.logistics.gas.generation.coal_burner.CoalBurnerBlock
 import org.valkyrienskies.clockwork.content.logistics.gas.generation.compressor.AirCompressorBlock
@@ -83,6 +86,7 @@ import org.valkyrienskies.clockwork.content.physicalities.wing.WingBlock
 import org.valkyrienskies.clockwork.content.propulsion.sugar_rocket.SugarRocketBlock
 import org.valkyrienskies.clockwork.util.builder.BuilderTransformersClockwork
 import org.valkyrienskies.clockwork.util.builder.ClockworkRegistrate
+import java.util.function.DoubleSupplier
 import java.util.function.Supplier
 
 
@@ -183,6 +187,21 @@ object ClockworkBlocks {
             .item()
             .tab(ClockworkMod.PHYSICAL_CREATIVE_TABINFO)
             .model(AssetLookup.customBlockItemModel("phys_bearing"))
+            .build()
+            .register()
+
+    @JvmField
+    val GIMBAL_BEARING: BlockEntry<GimbalBearingBlock> =
+        REGISTRATE.block<GimbalBearingBlock>("gimbal_bearing") { properties: BlockBehaviour.Properties? ->
+            GimbalBearingBlock(properties!!)
+        }
+            .initialProperties { SharedProperties.stone() }
+            .transform(axeOrPickaxe())
+            .properties { it.noOcclusion() }
+            .addLayer { Supplier { RenderType.cutout() } }
+            .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+            .item()
+            .tab(ClockworkMod.PHYSICAL_CREATIVE_TABINFO)
             .build()
             .register()
 
@@ -603,6 +622,30 @@ object ClockworkBlocks {
             .transform(displaySource(ClockworkDisplaySources.KNODE))
             .item()
             .tab(ClockworkMod.GAS_CREATIVE_TABINFO)
+            .build()
+            .register()
+
+    @JvmField
+    val STERLING_ENGINE: BlockEntry<SterlingEngineBlock> =
+        REGISTRATE.block("sterling_engine") { properties: BlockBehaviour.Properties? ->
+            SterlingEngineBlock(properties!!)
+        }
+            .initialProperties { Blocks.IRON_BLOCK }
+            .transform(axeOrPickaxe())
+            .properties { it.noOcclusion() }
+            .addLayer { Supplier { RenderType.cutout() } }
+            .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+            .transform(displaySource(ClockworkDisplaySources.KNODE))
+            .onRegister { block: SterlingEngineBlock ->
+                BlockStressValues.CAPACITIES.register(
+                    block,
+                    DoubleSupplier { ClockworkConfig.SERVER.gasEngine.sterlingEngineStressCapacity }
+                )
+            }
+            .onRegister(BlockStressValues.setGeneratorSpeed(64, true))
+            .item()
+            .tab(ClockworkMod.GAS_CREATIVE_TABINFO)
+            .model(AssetLookup.customBlockItemModel("sterling_engine", "block"))
             .build()
             .register()
 
