@@ -489,6 +489,9 @@
   "vs_clockwork.display_source.duct.pressure": "Pressure",
   "vs_clockwork.display_source.duct.temperature": "Temperature",
 
+  "vs_clockwork.ponder.tag.cw_ponders": "VS: Clockwork",
+  "vs_clockwork.ponder.tag.cw_ponders.description": "Features added by Valkyrien Skies: Clockwork",
+
   "vs_clockwork.ponder.wanderwand.header": "Wanderwand",
   "vs_clockwork.ponder.wanderwand.text_1": "Place the wand in the Physics Infuser",
   "vs_clockwork.ponder.wanderwand.text_2": "Or use the Gravitron",
