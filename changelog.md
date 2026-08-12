@@ -2,7 +2,8 @@
 Holy bug fixes batman
 
 ### Updated Kelvin:
-- Improved the default solver
+- New and shiny default solver (JacobiSeidel)
+- Prettier gas particles
 - Removed the wall heat system
 
 ### Additions:
